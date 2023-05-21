@@ -3,13 +3,16 @@ import {useState} from  'react'
 
 function App() {
   const [queryDescription, setQueryDescription] = useState("")
-
+  const onSubmit = (e) => {
+    e.preventDefault();
+    console.log("form submitted: ", queryDescription);
+  }
   return (
     <main className={styles.main}>
       <img src='https://cdn-icons-png.flaticon.com/128/4492/4492311.png' alt='Sql image' className={styles.icon}/>
       <h3>Instant AI-generated SQL code!</h3>
 
-      <form>
+      <form onSubmit={onSubmit}>
         <input
           type='text'
           name='query-description'
