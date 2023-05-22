@@ -1,38 +1,17 @@
-import openaiClient from "./api.js";
-
 const generate = async (queryDescription) => {
-
-  const daVinci = async (queryDescription) => {
-    const response = await openaiClient.createCompletion({
-      model: 'text-davinci-003',
-      prompt: `Convert the following natural language description into a SQL query:\n\n${queryDescription}`,
-      max_tokens: 60,
-      top_p: 1.0,
-      frequency_penalty: 0.0,
-      presence_penalty: 0.0,
-
+  const bardAPI = async (queryDescription) => {
+    const inputText = `Give only sql code of: ${queryDescription}`; // Add desired prefix
+    const response = await fetch("https://api.bardapi.dev/chat", {
+      headers: { Authorization: "Bearer API_KEY" },
+      method: "POST",
+      body: JSON.stringify({ input: inputText }),
     });
-    return response.data.choices[0].text;
+    const data = await response.json();
+    return data.output;
   };
 
-  const chatGPT = async (queryDescription) => {
-    const message = [
-      { role: "system", content: `You are a translator from plain English to SQL.` },
-      { role: "user", content: `Convert the following natural language description into a SQL query:\n\nShow all all the elements in the table users` },
-      { role: "assistant", content: "SELECT * FROM users;" },
-      { role: "user", content: `Convert the following natural language description into a SQL query:\n\n${queryDescription}` },
-    ];
-    const response = await openaiClient.createChatCompletion({
-      model: "gpt-3.5-turbo",
-      messages: message,
-    });
-
-    return response.data.choices[0].message.content;
-  }
-
-  const sqlQuery = await chatGPT(queryDescription);
+  const sqlQuery = await bardAPI(queryDescription);
   return sqlQuery;
-
 };
 
 export default generate;

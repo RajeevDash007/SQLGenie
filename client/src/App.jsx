@@ -30,14 +30,13 @@ function App() {
       <h3>Instant AI-generated SQL code!</h3>
 
       <form onSubmit={onSubmit}>
-        <input
-          type="text"
+        <textarea
           name="query-description"
-          placeholder="Describe your query"
+          placeholder="Give a brief explanation of your query"
           value={userPrompt}
           onChange={(e) => setUserPrompt(e.target.value)}
         />
-        <input type="submit" value="Generate query" />
+        <input type="submit" value="Craft your query" />
       </form>
       <pre>{sqlQuery}</pre>
     </main>
