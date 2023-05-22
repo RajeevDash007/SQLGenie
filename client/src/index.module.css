@@ -79,8 +79,10 @@
     overflow: hidden;
     background-color: transparent;
     color: lime;
-    padding: 100px;
+    padding: 50px;
     max-width: 100%;
-    margin: 100px;
+    margin: 20px;
     border:2px solid #10a37f;
   }
+
+  
