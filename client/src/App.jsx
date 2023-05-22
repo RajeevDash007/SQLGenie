@@ -2,11 +2,28 @@ import styles from './index.module.css'
 import {useState} from  'react'
 
 function App() {
-  const [queryDescription, setQueryDescription] = useState("")
-  const onSubmit = (e) => {
+  const [userPrompt, setUserPrompt] = useState("");
+  const [sqlQuery, setSqlQuery] = useState("");
+
+  const onSubmit = async (e) => {
     e.preventDefault();
-    console.log("form submitted: ", queryDescription);
-  }
+    const query = await generateQuery();
+    setSqlQuery(query);
+  };
+
+  const generateQuery = async () => {
+    const response = await fetch("http://localhost:3002/generate", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ queryDescription: userPrompt }),
+    });
+
+    const data = await response.json();
+    return data.sqlQuery.trim();
+  };
+
   return (
     <main className={styles.main}>
       <img src='https://cdn-icons-png.flaticon.com/128/4492/4492311.png' alt='Sql image' className={styles.icon}/>
@@ -14,14 +31,15 @@ function App() {
 
       <form onSubmit={onSubmit}>
         <input
-          type='text'
-          name='query-description'
-          placeholder='Provide an explanation of your query.'
-          onChange={(e) => setQueryDescription(e.target.value)}
+          type="text"
+          name="query-description"
+          placeholder="Describe your query"
+          value={userPrompt}
+          onChange={(e) => setUserPrompt(e.target.value)}
         />
-
-        <input type='submit' value="Craft query" />
+        <input type="submit" value="Generate query" />
       </form>
+      <pre>{sqlQuery}</pre>
     </main>
   )
 }
